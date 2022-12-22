@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ludoficacion- adulto mayor</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="js/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="js/puzzle/slidingPuzzle.js"></script>
+	<script type="text/javascript" src="js/puzzle/wordSearchPuzzle.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+</head>
+<body ng-app="puzzleApp">
+	<ul id="types">
+		<li ng-repeat="t in types" ng-class="{'selected': t.id == type}">
+			<a ng-href="#/{{t.id}}">{{t.title}}</a>
+		</li>
+	</ul>
+
+	<div ng-include="type"></div>
+
+	<script type="text/ng-template" id="sliding-puzzle">
+		<fieldset id="sliding-simple">
+			<legend>Puzzle Basico</legend>
+			<sliding-puzzle size="3x3" src="img/angular.png"></sliding-puzzle>
+		</fieldset><br/>
+
+		<fieldset id="sliding-advanced" ng-controller="slidingAdvancedCtrl">
+			<legend>Puzzle avanzado</legend>
+			<div ng-repeat="puzzle in puzzles">
+				<div class="status">
+					movimientos: <strong>{{puzzle.api.moves}}</strong><br/>
+					resuelto?: <strong>{{puzzle.api.isSolved()}}</strong>
+				</div>
+				<div class="size">
+					filas: <input type="text" ng-model="puzzle.rows" size="2"/>
+					columnas: <input type="text" ng-model="puzzle.cols" size="2"/><br/>
+					<button ng-click="puzzle.api.shuffle()">Reiniciar</button>
+					<button ng-click="puzzle.api.solve()">Resolver</button>
+				</div>
+				<sliding-puzzle api="puzzle.api" size="{{puzzle.rows}}x{{puzzle.cols}}" src="{{puzzle.src}}"></sliding-puzzle>
+			</div>
+		</fieldset>
+	</script>
+
+	<script type="text/ng-template" id="word-search-puzzle">
+		<div id="word-search" ng-controller="wordSearchCtrl">
+			<ul class="words">
+				<li ng-repeat="word in puzzle.words" ng-class="{'found': word.found}">
+					{{word.name}}
+				</li>
+			</ul>
+			<word-search-puzzle matrix="matrix" words="words" api="puzzle"></word-search-puzzle>
+			<div class="status">
+				<button ng-click="puzzle.solve()" ng-show="!puzzle.solved" class="solve">Resolver?</button>
+				<strong ng-show="puzzle.solved" ng-show="puzzle.solved">Resuelto!</strong>
+			</div>
+		</div>
+	</script>
+	<script type="text/ng-template" id="form">
+		<h4>Porfavor resolver el siguiente cuestionario sobre la experiencia, sugerencias y recomendaciones: https://docs.google.com/forms/d/e/1FAIpQLScsadgr3ED5GwOQXNZhfr5uVk23zYrO2KjBZMV4NuZyss3O7w/viewform?usp=sf_link</h4>
+	</script>
+</body>
+</html>
